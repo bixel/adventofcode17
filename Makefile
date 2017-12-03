@@ -2,8 +2,6 @@ SOURCES = $(wildcard */main.swift)
 EXES = $(patsubst %/main.swift,build/%,$(SOURCES))
 OUTPUTS = $(patsubst %/main.swift,build/%-out.txt,$(SOURCES))
 
-$(info $(EXES))
-
 all: $(OUTPUTS)
 
 $(EXES): build/%: %/main.swift | build
