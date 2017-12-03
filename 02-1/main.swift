@@ -23,4 +23,19 @@ func maxDifference(_ row: String) -> Int {
   return integers.max()! - integers.min()!
 }
 
+func evenDivision(_ row: String) -> Int {
+  let integers: [Int] = row.split(separator: "\t").map { Int($0)! }
+  for (i, a) in integers.enumerated() {
+    for b in integers[i + 1 ..< integers.count] {
+      if a % b == 0 {
+        return a / b
+      } else if  b % a == 0 {
+        return b / a
+      }
+    }
+  }
+  return 0
+}
+
 print(input.split(separator: "\n").reduce(0, { $0 + maxDifference(String($1)) }))
+print(input.split(separator: "\n").reduce(0, { $0 + evenDivision(String($1)) }))
