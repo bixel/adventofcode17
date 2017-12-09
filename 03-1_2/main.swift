@@ -39,7 +39,7 @@ class GridEdge {
 
 func fillEdges(_ maxNumber: Int) -> [GridEdge] {
   var edgeList: [GridEdge] = [GridEdge()]
-  while edgeList.last!.value <= maxNumber {
+  while edgeList.last!.value < maxNumber {
     edgeList.append(GridEdge(edgeList.last!))
   }
   return edgeList
@@ -48,20 +48,9 @@ func fillEdges(_ maxNumber: Int) -> [GridEdge] {
 // first fill a list of edges
 let edges = fillEdges(inputNumber)
 
-for edge in edges {
-  print("Edge \(edge.value) at corner \(edge.corner) has radius \(edge.radius)")
-}
-
 // the correct starting point lies in between the last two edges
-let outerWidthHalf = (edges.last!.value - edges[edges.count - 2].value) / 2
-
-var distance = outerWidthHalf
-
-while distance + edges[edges.count - 2].value < inputNumber {
-  distance -= 1
-  print(distance)
-}
-
-distance += edges.last!.radius
-
-print(distance)
+let previousEdge = edges[edges.count - 2]
+let distanceToPreviousEdge = inputNumber - previousEdge.value
+let outerWidthHalf = edges.last!.distance / 2
+let distance = edges.last!.radius + abs(outerWidthHalf - distanceToPreviousEdge)
+print("Distance \(distance)")
