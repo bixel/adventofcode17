@@ -513,9 +513,22 @@ let input = getInput("""
   jwfm ptjwrbl hhuv uolz adyweh qpj wxyogp igvnojq jmfw pqs fsnirby
   """)
 
-let badPasswordCount = input
+let badPasswords = input
   .split(separator: "\n")  // extract single passphrases
   .map { $0.split(separator: " ") }  // extract words
-  .reduce(0, { $0 + ($1.count == Set($1).count ? 1 : 0) })  // count phrases with unique words
+  .filter { $0.count == Set($0).count }
 
-print(badPasswordCount)
+print(badPasswords.count)
+
+let notSoBadButStillBadPasswordCount = badPasswords
+  .reduce(0, {
+    let setOfCharacterSets = Set($1.map { Set($0) })
+    let listOfCharacterSets = $1.map { Set($0) }
+    if setOfCharacterSets.count == listOfCharacterSets.count {
+      return $0 + 1
+    } else {
+      return $0
+    }
+  })
+
+print(notSoBadButStillBadPasswordCount)
