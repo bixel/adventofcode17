@@ -62,16 +62,32 @@ let input = getInput("""
   -674 -432 -402 -702 -724 -524 -753 -146 -719 -953
   """)
 
-var instructions = String(input.map { $0 == "\n" ? " " : $0 })
+let instructions = String(input.map { $0 == "\n" ? " " : $0 })
   .split(separator: " ")
   .map { Int($0)! }
 
+var mutableInstructions = instructions,
+  strangeMutableInstructions = instructions
+
 var index = 0, counter = 0
-while index >= 0 && index < instructions.count {
-  let instruction = instructions[index]
-  instructions[index] += 1
+while index >= 0 && index < mutableInstructions.count {
+  let instruction = mutableInstructions[index]
+  mutableInstructions[index] += 1
   index += instruction
   counter += 1
 }
+print(counter)
 
+index = 0
+counter = 0
+while index >= 0 && index < strangeMutableInstructions.count {
+  let instruction = strangeMutableInstructions[index]
+  if instruction >= 3 {
+    strangeMutableInstructions[index] -= 1
+  } else {
+    strangeMutableInstructions[index] += 1
+  }
+  index += instruction
+  counter += 1
+}
 print(counter)
