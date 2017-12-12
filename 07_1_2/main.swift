@@ -1,3 +1,5 @@
+import Foundation
+
 let input = getInput("""
   bxlur (38)
   vgeifn (90)
@@ -1459,34 +1461,82 @@ class Program {
   let name: String
   let weight: Int
   var subprograms: [Program]
+  var subprogramNames: [String]
   var mother: Program?
 
-  init(_ name: String, _ weight: Int, _ subprograms: [Program] = []){
+  init(_ name: String, _ weight: Int, _ subprograms: [Program] = [],
+       _ subprogramNames: [String] = []){
     self.name = name
     self.weight = weight
     self.subprograms = subprograms
+    self.subprogramNames = subprogramNames
   }
-}
 
-let programs = input
-  .split(separator: "\n")
-
-let programNames = programs
-  .map { String($0.split(separator: " ")[0]) }
-
-let programWeights = programs
-  .map { String($0.split(separator: " ")[1]) }
-  .map { $0[$0.index(after: $0.startIndex)..<$0.index(before: $0.endIndex)] }
-  .map { Int($0)! }
-
-let subPrograms = programs
-  .map { (line) -> [String] in
-    let splits = line.split(separator: ">")
-    if splits.count >= 1 {
-      return splits[1].map { String($0) }
-    } else {
-      return []
+  func fillSubprograms(_ programDict: inout [String:Program]){
+    for subname in self.subprogramNames {
+      if let subprogram = programDict[subname] {
+        subprogram.mother = self
+        self.subprograms.append(subprogram)
+        programDict[subname] = nil
+        subprogram.fillSubprograms(&programDict)
+      }
     }
   }
 
-print(subPrograms)
+  var weightSum: Int {
+    return self.weight + self.subprograms.reduce(0, { $0 + $1.weightSum })
+  }
+
+  func findFirstUnbalanced() -> Program? {
+    for subprogram in self.subprograms {
+      if let unbalanced = subprogram.findFirstUnbalanced() {
+        return unbalanced
+      }
+    }
+    if Set(self.subprograms.map { $0.weightSum }).count > 1 {
+      return self
+    } else {
+      return nil
+    }
+  }
+}
+
+extension Program: CustomStringConvertible {
+  var description: String {
+    let subNames = subprograms.map { "\($0.name) (\($0.weightSum))" }.joined(separator: " ")
+    return """
+    \(name) (\(weightSum))
+    \(subNames)
+    """
+  }
+}
+
+let programLines = input
+  .split(separator: "\n")
+  .map { String($0) }
+
+var programDict: [String:Program] = [:]
+
+// first build dictionary of programs to quickly access them
+for line in programLines {
+  let splits = line.split(separator: " ")
+  let name = String(splits[0])
+  let weight = Int(splits[1].replacingOccurrences(of: "[()]", with: "", options: .regularExpression))!
+  programDict[name] = Program(name, weight)
+  if splits.count > 2 {
+    programDict[name]!.subprogramNames = splits[3...].map { $0.replacingOccurrences(of: ",", with: "") }
+  }
+}
+
+// then build a dict of root programs
+for (_, program) in programDict {
+  program.fillSubprograms(&programDict)
+}
+
+let root = programDict.first!.value
+
+print(root.name)
+
+let firstUnbalanced = root.findFirstUnbalanced()!
+var weights = firstUnbalanced.subprograms.map {($0.weight, $0.weightSum)}.sorted {$0.1 > $1.1}
+print(weights[0].0 - (weights[0].1 - weights[1].1))
