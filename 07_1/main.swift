@@ -1454,3 +1454,38 @@ let input = getInput("""
   abphjyv (187) -> elwic, wgxlaau
   uhcach (18)
   """)
+
+class Program {
+  let name: String
+  let weight: Int
+  var subprograms: [Program]
+
+  init(_ name: String, _ weight: Int, _ subprograms: [Program] = []){
+    self.name = name
+    self.weight = weight
+    self.subprograms = subprograms
+  }
+}
+
+let programs = input
+  .split(separator: "\n")
+
+let programNames = programs
+  .map { String($0.split(separator: " ")[0]) }
+
+let programWeights = programs
+  .map { String($0.split(separator: " ")[1]) }
+  .map { $0[$0.index(after: $0.startIndex)..<$0.index(before: $0.endIndex)] }
+  .map { Int($0)! }
+
+let subPrograms = programs
+  .map { (line) -> [String] in
+    let splits = line.split(separator: ">")
+    if splits.count >= 1 {
+      return splits[1].map { String($0) }
+    } else {
+      return []
+    }
+  }
+
+print(subPrograms)
