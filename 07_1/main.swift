@@ -1459,6 +1459,7 @@ class Program {
   let name: String
   let weight: Int
   var subprograms: [Program]
+  var mother: Program?
 
   init(_ name: String, _ weight: Int, _ subprograms: [Program] = []){
     self.name = name
