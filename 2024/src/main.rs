@@ -3,6 +3,7 @@ use std::env;
 
 mod aoc_00_hello_world;
 mod aoc_01;
+mod aoc_02;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -20,6 +21,9 @@ fn main() {
             println!("{}", aoc_01::function_a(&line_vec));
             println!("{}", aoc_01::function_b(&line_vec));
         },
+        "2" => {
+            println!("{}", aoc_02::function_a(&line_vec))
+        }
         _ => println!("Command not found"),
     }
 }
