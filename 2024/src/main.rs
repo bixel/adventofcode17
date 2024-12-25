@@ -22,8 +22,9 @@ fn main() {
             println!("{}", aoc_01::function_b(&line_vec));
         },
         "2" => {
-            println!("{}", aoc_02::function_a(&line_vec))
-        }
+            println!("{}", aoc_02::function_a(&line_vec));
+            println!("{}", aoc_02::function_b(&line_vec));
+        },
         _ => println!("Command not found"),
     }
 }
