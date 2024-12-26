@@ -34,11 +34,11 @@ pub fn function_a(input: &Vec<String>, debug: Option<bool>) -> i32 {
             let mut pos_sep = pos_scan;
             let mut found_sep = false;
             let mut pos_end = pos_scan;
-            while "0123456789,)".contains(&input_concat.chars().nth(pos_end).unwrap().to_string())
+            while "0123456789,)".contains(&input_concat[pos_end..pos_end+1])
                 && pos_end <= input_concat.len()
             {
-                let char = &input_concat.chars().nth(pos_end).unwrap();
-                if *char == ')' && found_sep {
+                let char = &input_concat[pos_end..pos_end+1];
+                if char == ")" && found_sep {
                     let left: i32 = input_concat[pos_scan..pos_sep].parse().unwrap();
                     let right: i32 = input_concat[pos_sep + 1..pos_end].parse().unwrap();
                     let result = left * right;
@@ -50,7 +50,7 @@ pub fn function_a(input: &Vec<String>, debug: Option<bool>) -> i32 {
                     };
                     sum += result;
                     break;
-                } else if *char == ',' {
+                } else if char == "," {
                     if !found_sep {
                         pos_sep = pos_end;
                         found_sep = true;
