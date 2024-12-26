@@ -5,6 +5,7 @@ mod aoc_00_hello_world;
 mod aoc_01;
 mod aoc_02;
 mod aoc_03;
+mod aoc_04;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -32,6 +33,9 @@ fn main() {
         },
         "3" => {
             println!("{}", aoc_03::function_a(&line_vec, Some(debug)));
+        },
+        "4" => {
+            println!("{}", aoc_04::function_a(&line_vec, Some(debug)));
         },
         _ => println!("Command not found"),
     }
