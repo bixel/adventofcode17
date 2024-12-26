@@ -4,12 +4,17 @@ use std::env;
 mod aoc_00_hello_world;
 mod aoc_01;
 mod aoc_02;
+mod aoc_03;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
     let mut program: &str = "";
+    let mut debug = false;
     if args.len() >= 2 {
         program = &args[1];
+    }
+    if args.len() >= 3 {
+        debug = &args[2].to_lowercase() == "--debug";
     }
 
     let lines = io::stdin().lines();
@@ -24,6 +29,9 @@ fn main() {
         "2" => {
             println!("{}", aoc_02::function_a(&line_vec));
             println!("{}", aoc_02::function_b(&line_vec));
+        },
+        "3" => {
+            println!("{}", aoc_03::function_a(&line_vec, Some(debug)));
         },
         _ => println!("Command not found"),
     }
