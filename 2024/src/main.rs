@@ -36,6 +36,7 @@ fn main() {
         },
         "4" => {
             println!("{}", aoc_04::function_a(&line_vec, Some(debug)));
+            println!("{}", aoc_04::function_b(&line_vec, Some(debug)));
         },
         _ => println!("Command not found"),
     }

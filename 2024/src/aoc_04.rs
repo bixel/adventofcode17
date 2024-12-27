@@ -24,7 +24,7 @@ fn find_direction(
     return *word == word_search;
 }
 
-fn scan_point(matrix: &str, dim: &usize, word: &str, pos_start: &(usize, usize)) -> i32 {
+fn scan_for_word(matrix: &str, dim: &usize, word: &str, pos_start: &(usize, usize)) -> i32 {
     let mut cnt = 0;
     for dir in [
         (1, 0),
@@ -43,6 +43,30 @@ fn scan_point(matrix: &str, dim: &usize, word: &str, pos_start: &(usize, usize))
     return cnt;
 }
 
+fn scan_for_xword(matrix: &str, dim: &usize, pos_start: &(usize, usize)) -> i32 {
+    let idx_pos_start = pos_start.0 + pos_start.1 * *dim;
+    let str_start = matrix.get(idx_pos_start..=idx_pos_start).unwrap();
+    if str_start != "A" {
+        return 0;
+    }
+
+    let word_am = "AM";
+    let word_as = "AS";
+    let mut cnt = 0;
+    for dir in [(1, 1), (1, -1), (-1, -1), (-1, 1)] {
+        if find_direction(matrix, dim, &word_am, pos_start, &dir)
+            && find_direction(matrix, dim, &word_as, pos_start, &(-1 * dir.0, -1 * dir.1))
+        {
+            cnt += 1;
+        }
+    }
+    if cnt == 2 {
+        return 1;
+    } else {
+        return 0;
+    }
+}
+
 pub fn function_a(input: &Vec<String>, debug: Option<bool>) -> i32 {
     let debug = debug.unwrap_or(false);
     let input_joined = input.concat();
@@ -53,9 +77,27 @@ pub fn function_a(input: &Vec<String>, debug: Option<bool>) -> i32 {
     if debug {
         println!("Input:\n{}", input.join("\n"))
     }
-    for x in 0..=dim_x {
-        for y in 0..=dim_y {
-            cnt_total += scan_point(&input_joined.as_str(), &dim_x, "XMAS", &(x, y))
+    for x in 0..dim_x {
+        for y in 0..dim_y {
+            cnt_total += scan_for_word(&input_joined.as_str(), &dim_x, "XMAS", &(x, y))
+        }
+    }
+    return cnt_total;
+}
+
+pub fn function_b(input: &Vec<String>, debug: Option<bool>) -> i32 {
+    let debug = debug.unwrap_or(false);
+    let input_joined = input.concat();
+    let dim_x = input[0].len();
+    let dim_y = input.len();
+    let mut cnt_total = 0;
+    assert!(dim_x == dim_y);
+    if debug {
+        println!("Input:\n{}", input.join("\n"))
+    }
+    for x in 0..dim_x {
+        for y in 0..dim_y {
+            cnt_total += scan_for_xword(&input_joined.as_str(), &dim_x, &(x, y))
         }
     }
     return cnt_total;
